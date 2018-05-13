@@ -1,0 +1,61 @@
+﻿@model StocktakingOnline.Web.Models.ViewModel.HomeViewModel;
+@{
+    ViewData["Title"] = "工作列表";
+    var currentJob = Model.Jobs.SingleOrDefault(j => j.JobId == Model.UserCurrentJobId);
+}
+
+<div>
+    欢迎您，@Model.UserDisplayName
+    <a asp-controller="Account" asp-action="Logout">注销登录</a>
+</div>
+
+<div>
+    当前您所在工作：
+    @if (currentJob == null)
+    {
+        @:无(点击下方切换)
+    }
+    else
+    {
+        <strong>[@currentJob.JobName] @currentJob.JobDescription</strong>
+        @if (currentJob.IsOpened)
+        {
+            <span>(进行中)</span>
+        }
+        else
+        {
+            <span>(已结束)</span>
+        }
+    }
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>工作编号</th>
+            <th>描述</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in Model.Jobs)
+        {
+            <tr>
+                <td>@job.JobName</td>
+                <td>@job.JobDescription</td>
+                <td>
+                    @(job.IsOpened ? "进行中" : "已结束")
+                </td>
+                <td>
+                    @if (job.JobId != Model.UserCurrentJobId && job.IsOpened)
+                    {
+                        <a asp-controller="Home" asp-action="SwitchJob" asp-route-jobId="@job.JobId">切换工作</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+

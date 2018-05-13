@@ -1,0 +1,54 @@
+﻿@using StocktakingOnline.Web.Models.ViewModel
+@model AddInventoryItemViewModel
+
+<form class="form" asp-controller="Inventory" asp-action="AddItem" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    @*<div class="form-group">
+            <label asp-for="ProductId"></label>
+            <input asp-for="ProductId" class="form-control" required />
+            <span asp-validation-for="ProductId" class="text-danger"></span>
+        </div>*@
+
+    @*<div class="form-group">
+            <label asp-for="Quantity"></label>
+            <input asp-for="Quantity" class="form-control" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>*@
+
+    <div class="form-group">
+        <label asp-for="DepartmentId"></label>
+        <select asp-for="DepartmentId" asp-items="Model.DepartmentList"></select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Brand"></label>
+        @foreach (var b in Model.BrandList)
+        {
+            <input type="radio" asp-for="Brand" value="@b.Value" />@b.Text
+        }
+        <span asp-validation-for="Brand" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Model"></label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SerialNumber"></label>
+        <input asp-for="SerialNumber" class="form-control" />
+        <span asp-validation-for="SerialNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Images"></label>
+        <input asp-for="Images" class=form-control accept=".jpg,image/jpeg" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">添加</button>
+    </div>
+</form>

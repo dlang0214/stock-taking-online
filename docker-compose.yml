@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  stocktakingonline.web:
+    image: stocktakingonline
+    build:
+      context: .
+      dockerfile: StocktakingOnline.Web/Dockerfile

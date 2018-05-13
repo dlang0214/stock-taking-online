@@ -1,0 +1,54 @@
+﻿@model StocktakingOnline.Web.Models.ViewModel.PreviewViewModel
+@using StocktakingOnline.Web.Services.Declaration
+@inject IStorageService storageService
+@{
+    ViewData["Title"] = "浏览盘点数据";
+}
+@if (Model.CurrentJob == null)
+{
+    <div>
+        <p>当前没有进入盘点工作，请先到“工作列表”页面选择一个工作项目。</p>
+    </div>
+}
+else
+{
+    <div>
+        <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
+        <p>状态：@(Model.CurrentJob.IsOpened ? "进行中" : "已结束")</p>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>资产编号</th>
+                <th>类别</th>
+                <th>品牌</th>
+                <th>型号</th>
+                <th>序列号</th>
+                <th>照片</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.AssetNumber</td>
+                    <td>@item.DepartmentName</td>
+                    <td>@item.Brand</td>
+                    <td>@item.Model</td>
+                    <td>@item.SerialNumber</td>
+                    <td>
+                        @foreach (var imgName in item.ImageFiles.Split(";"))
+                        {
+                            var url = storageService.GetFileDownloadUrl(imgName);
+                            if (!string.IsNullOrWhiteSpace(url))
+                            {
+                                <a href="@url" target="_blank"><img src="@url" height="60" /></a>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

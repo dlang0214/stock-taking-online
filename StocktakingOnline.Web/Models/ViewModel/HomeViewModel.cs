@@ -7,5 +7,6 @@ namespace StocktakingOnline.Web.Models.ViewModel
 	{
 		public List<Job> Jobs { get; set; }
 		public int UserCurrentJobId { get; set; }
+		public string UserDisplayName { get; set; }
 	}
 }

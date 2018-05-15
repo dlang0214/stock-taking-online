@@ -1,8 +1,13 @@
 ﻿@model StocktakingOnline.Web.Models.ViewModel.HomeViewModel;
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "工作列表";
     var currentJob = Model.Jobs.SingleOrDefault(j => j.JobId == Model.UserCurrentJobId);
 }
+
+<div>
+    欢迎您，@Model.UserDisplayName
+    <a asp-controller="Account" asp-action="Logout">注销登录</a>
+</div>
 
 <div>
     当前您所在工作：
@@ -13,6 +18,14 @@
     else
     {
         <strong>[@currentJob.JobName] @currentJob.JobDescription</strong>
+        @if (currentJob.IsOpened)
+        {
+            <span>(进行中)</span>
+        }
+        else
+        {
+            <span>(已结束)</span>
+        }
     }
 </div>
 
@@ -32,7 +45,7 @@
                 <td>@job.JobName</td>
                 <td>@job.JobDescription</td>
                 <td>
-                    @(job.IsOpened?"进行中":"结束")
+                    @(job.IsOpened ? "进行中" : "已结束")
                 </td>
                 <td>
                     @if (job.JobId != Model.UserCurrentJobId && job.IsOpened)
@@ -40,8 +53,9 @@
                         <a asp-controller="Home" asp-action="SwitchJob" asp-route-jobId="@job.JobId">切换工作</a>
                     }
                 </td>
-            </tr>}
+            </tr>
+        }
     </tbody>
 
 </table>
-    
+

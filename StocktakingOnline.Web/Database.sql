@@ -44,7 +44,7 @@ CREATE TABLE Users
     UserId int IDENTITY(1,1),
     UserName NVARCHAR(50) NOT NULL, --登录名称，例如手机号
     DisplayName NVARCHAR(50) NOT NULL, --显示名称，例如真实姓名
-    PasswordHash NVARCHAR(50) NOT NULL, --加密后的密码
+    PasswordHash NVARCHAR(200) NOT NULL, --加密后的密码
     CreatedTime DATETIME NOT NULL, --创建时间
     CurrentJobId int NULL, --当前所在Job
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([UserId] ASC)
@@ -72,5 +72,12 @@ CREATE TABLE [dbo].[UserRoles]
     CONSTRAINT [FK_UserRoles_User] FOREIGN KEY ([UserId]) REFERENCES [Users]([UserId]),
     CONSTRAINT [FK_UserRoles_Role] FOREIGN KEY ([RoleId]) REFERENCES [Roles]([RoleId])
 )
+GO
+
+--用户-角色视图
+CREATE VIEW UserRolesView AS
+SELECT ur.*, r.RoleName
+FROM UserRoles ur
+JOIN Roles r ON ur.RoleId = r.RoleId
 GO
 

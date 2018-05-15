@@ -11,6 +11,7 @@ using StocktakingOnline.Web.Services.Implementation;
 using Microsoft.AspNetCore.Identity;
 using StocktakingOnline.Web.Models.Database;
 using StocktakingOnline.Web.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace StocktakingOnline.Web
 {
@@ -28,13 +29,28 @@ namespace StocktakingOnline.Web
 		{
 			services.AddScoped<IDbService, DbService>();
 			services.AddScoped<IJobService, JobService>();
+			services.AddScoped<IUserService, UserService>();
 
 			services.AddDistributedMemoryCache();
 			services.AddSession();
 
 			services.AddTransient<IUserStore<DbUser>, UserStore>();
 			services.AddTransient<IRoleStore<DbRole>, RoleStore>();
-			services.AddIdentity<DbUser, DbRole>().AddDefaultTokenProviders();
+
+			services.AddIdentity<DbUser, DbRole>(options =>
+			{
+				// Password settings
+				options.Password.RequireDigit = false;
+				options.Password.RequiredLength = 6;
+				options.Password.RequiredUniqueChars = 2;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+			})
+			.AddDefaultTokenProviders();
+
+			//Configure cookie if necessary
+			//services.ConfigureApplicationCookie(options=>{});
 
 			services.AddMvc();
 		}
@@ -52,6 +68,8 @@ namespace StocktakingOnline.Web
 			}
 
 			app.UseStaticFiles();
+
+			app.UseAuthentication();
 
 			app.UseMvc(routes =>
 			{

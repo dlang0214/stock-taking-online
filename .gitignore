@@ -3,8 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+.DS_Store
+
 #Project files
 appsettings.*.json
+internal-nlog.txt
 
 # User-specific files
 *.suo

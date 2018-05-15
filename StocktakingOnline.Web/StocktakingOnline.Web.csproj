@@ -39,4 +39,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Services\Declaration\" />
+    <Folder Include="Services\Implementation\" />
+    <Folder Include="Models\ViewModel\" />
+    <Folder Include="Models\Database\" />
+    <Folder Include="Models\Domain\" />
+  </ItemGroup>
 </Project>

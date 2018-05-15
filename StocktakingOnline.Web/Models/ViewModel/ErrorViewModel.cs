@@ -1,6 +1,6 @@
 using System;
 
-namespace StocktakingOnline.Web.Models
+namespace StocktakingOnline.Web.Models.ViewModel
 {
 	public class ErrorViewModel
 	{

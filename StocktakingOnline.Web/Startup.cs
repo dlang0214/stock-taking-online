@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StocktakingOnline.Web.Services.Declaration;
+using StocktakingOnline.Web.Services.Implementation;
 
 namespace StocktakingOnline.Web
 {
@@ -21,6 +23,12 @@ namespace StocktakingOnline.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddScoped<IDbService, DbService>();
+			services.AddScoped<IJobService, JobService>();
+
+			services.AddDistributedMemoryCache();
+			services.AddSession();
+
 			services.AddMvc();
 		}
 

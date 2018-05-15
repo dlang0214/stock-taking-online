@@ -1,31 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using StocktakingOnline.Web.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
+using StocktakingOnline.Web.Models.ViewModel;
+using StocktakingOnline.Web.Services.Declaration;
 
 namespace StocktakingOnline.Web.Controllers
 {
 	public class HomeController : Controller
 	{
+		private readonly IJobService jobService;
 		private readonly ILogger<HomeController> logger;
-		private readonly IConfiguration configuration;
 
-		public HomeController(ILogger<HomeController> logger,IConfiguration configuration)
+		public HomeController(IJobService jobService, ILogger<HomeController> logger)
 		{
+			this.jobService = jobService;
 			this.logger = logger;
-			this.configuration = configuration;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			logger.LogDebug("Display Index page");
-			Debug.WriteLine(configuration.GetConnectionString("DefaultConnection"));
-			return View();
+			var jobs = await jobService.GetJobs();
+			var vm = new HomeViewModel
+			{
+				Jobs = jobs
+			};
+			return View(vm);
+		}
+
+		public async Task<IActionResult> SwitchJob(int jobId)
+		{
+			return new RedirectToActionResult("Index", "Home", null);
 		}
 
 		public IActionResult About()

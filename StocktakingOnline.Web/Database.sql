@@ -1,8 +1,13 @@
 ﻿--数据库建表脚本(SQL Server)
 
+CREATE DATABASE [STO];
+GO
+USE [STO];
+GO
+
 --2018/5/15
 --日志表
-CREATE TABLE [dbo].[Logs] (
+CREATE TABLE [Logs] (
       [Id] [int] IDENTITY(1,1) NOT NULL,
       [Application] [nvarchar](50) NOT NULL,
       [Logged] [datetime] NOT NULL,
@@ -18,9 +23,9 @@ CREATE TABLE [dbo].[Logs] (
       [Logger] [nvarchar](250) NULL,
       [Callsite] [nvarchar](max) NULL,
       [Exception] [nvarchar](max) NULL,
-    CONSTRAINT [PK_dbo.Log] PRIMARY KEY CLUSTERED ([Id] ASC)
-      WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-  ) ON [PRIMARY]
+    CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED ([Id] ASC)
+    )
+GO
 
 --工作表
 CREATE TABLE Jobs
@@ -30,7 +35,8 @@ CREATE TABLE Jobs
     JobDescription NVARCHAR(50),
     IsOpened BIT NOT NULL,
     CONSTRAINT [PK_dbo.Jobs] PRIMARY KEY CLUSTERED ([JobId] ASC)
-)
+);
+GO
 
 --用户表
 CREATE TABLE Users
@@ -43,5 +49,28 @@ CREATE TABLE Users
     CurrentJobId int NULL, --当前所在Job
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([UserId] ASC)
 )
+GO
+CREATE NONCLUSTERED INDEX [IX_Users_UserName] ON [Users] ([UserName])
+GO
 
+--角色表
+CREATE TABLE [dbo].[Roles]
+(
+    [RoleId] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    [RoleName] NVARCHAR(50) NOT NULL,
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Roles_RoleName] ON [Roles] ([RoleName])
+GO
+
+--用户-角色表
+CREATE TABLE [dbo].[UserRoles]
+(
+    [UserId] INT NOT NULL,
+    [RoleId] INT NOT NULL
+    PRIMARY KEY ([UserId], [RoleId]),
+    CONSTRAINT [FK_UserRoles_User] FOREIGN KEY ([UserId]) REFERENCES [Users]([UserId]),
+    CONSTRAINT [FK_UserRoles_Role] FOREIGN KEY ([RoleId]) REFERENCES [Roles]([RoleId])
+)
+GO
 

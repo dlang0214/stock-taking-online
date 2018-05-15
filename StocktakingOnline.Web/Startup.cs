@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StocktakingOnline.Web.Services.Declaration;
 using StocktakingOnline.Web.Services.Implementation;
+using Microsoft.AspNetCore.Identity;
+using StocktakingOnline.Web.Models.Database;
+using StocktakingOnline.Web.Services;
 
 namespace StocktakingOnline.Web
 {
@@ -28,6 +31,10 @@ namespace StocktakingOnline.Web
 
 			services.AddDistributedMemoryCache();
 			services.AddSession();
+
+			services.AddTransient<IUserStore<DbUser>, UserStore>();
+			services.AddTransient<IRoleStore<DbRole>, RoleStore>();
+			services.AddIdentity<DbUser, DbRole>().AddDefaultTokenProviders();
 
 			services.AddMvc();
 		}

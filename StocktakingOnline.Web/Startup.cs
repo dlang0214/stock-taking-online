@@ -30,6 +30,7 @@ namespace StocktakingOnline.Web
 			services.AddScoped<IDbService, DbService>();
 			services.AddScoped<IJobService, JobService>();
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IInventoryService, InventoryService>();
 
 			services.AddDistributedMemoryCache();
 			services.AddSession();

@@ -81,3 +81,16 @@ FROM UserRoles ur
 JOIN Roles r ON ur.RoleId = r.RoleId
 GO
 
+
+--盘点数据表
+CREATE TABLE InventoryItems
+(
+    RecordId NVARCHAR(50) NOT NULL PRIMARY KEY,
+    JobId int NOT NULL,
+    UserId int NOT NULL,
+    ProductId NVARCHAR(50) NOT NULL,
+    Quantity DECIMAL(18,5) NOT NULL,
+    ImageFiles NVARCHAR(MAX),
+    CreatedTime DATETIME NOT NULL
+)
+GO

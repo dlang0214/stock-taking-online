@@ -7,5 +7,6 @@ namespace StocktakingOnline.Web.Services.Declaration
 	public interface IJobService
 	{
 		Task<List<Job>> GetJobs();
+		Task<Job> GetJob(int jobId);
 	}
 }

@@ -1,0 +1,26 @@
+﻿@model StocktakingOnline.Web.Models.ViewModel.InventoryViewModel
+@{
+    ViewData["Title"] = "录入盘点数据";
+}
+@if (Model.CurrentJob == null)
+{
+    <div>
+        <p>当前没有进入盘点工作，请先到“工作列表”页面选择一个工作项目。</p>
+    </div>
+}
+else if (!Model.CurrentJob.IsOpened)
+{
+    <div>
+        <p>当前盘点工作<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong>已经结束。</p>
+    </div>
+}
+else
+{
+    <div>
+        <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
+    </div>
+
+    <div>
+        @await Html.PartialAsync("AddInventoryItem", Model.AddInventoryItemViewModel)
+    </div>
+}

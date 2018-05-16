@@ -4,10 +4,11 @@ using StocktakingOnline.Web.Models.Domain;
 using StocktakingOnline.Web.Services.Declaration;
 using StocktakingOnline.Web.Models.Database;
 using Dapper;
+using System.Collections.Generic;
 
 namespace StocktakingOnline.Web.Services.Implementation
 {
-	public class InventoryService:IInventoryService
+	public class InventoryService : IInventoryService
 	{
 		private readonly IDbService dbService;
 
@@ -20,7 +21,6 @@ namespace StocktakingOnline.Web.Services.Implementation
 		{
 			item.RecordId = GetRecordId(item.JobId, item.UserId);
 			item.CreatedTime = DateTime.Now;
-			item.ImageFiles = null;
 
 			var dbInventoryItem = new DbInventoryItem
 			{
@@ -29,9 +29,10 @@ namespace StocktakingOnline.Web.Services.Implementation
 				UserId = item.UserId,
 				ProductId = item.ProductId,
 				Quantity = item.Quantity,
-				CreatedTime = item.CreatedTime
+				CreatedTime = item.CreatedTime,
+				ImageFiles = string.Join(";", item.ImageFiles ?? new List<string>(0))
 			};
-			using(var db = await dbService.GetConnection())
+			using (var db = await dbService.GetConnection())
 			{
 				await db.InsertAsync<string, DbInventoryItem>(dbInventoryItem);
 			}
@@ -46,12 +47,12 @@ namespace StocktakingOnline.Web.Services.Implementation
 
 		public async Task AddPicture(string recordId, string imageFileName)
 		{
-			using(var db = await dbService.GetConnection())
+			using (var db = await dbService.GetConnection())
 			{
 				var item = await db.GetAsync<DbInventoryItem_ImageFiles>(recordId);
 				if (item == null) return;
 				imageFileName = imageFileName.ToLowerInvariant();
-				if(item.ImageFiles?.Contains(imageFileName) == true)
+				if (item.ImageFiles?.Contains(imageFileName) == true)
 				{
 					return;
 				}
@@ -87,7 +88,7 @@ namespace StocktakingOnline.Web.Services.Implementation
 
 		public async Task DeleteInventoryItem(string recordId)
 		{
-			using(var db = await dbService.GetConnection())
+			using (var db = await dbService.GetConnection())
 			{
 				await db.DeleteAsync<DbInventoryItem>(recordId);
 			}

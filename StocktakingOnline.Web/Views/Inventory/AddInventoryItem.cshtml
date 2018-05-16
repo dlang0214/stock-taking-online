@@ -1,7 +1,7 @@
 ﻿@using StocktakingOnline.Web.Models.ViewModel
 @model AddInventoryItemViewModel
 
-<form class="form" asp-controller="Inventory" asp-action="AddItem" method="post">
+<form class="form" asp-controller="Inventory" asp-action="AddItem" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="form-group">
@@ -14,6 +14,11 @@
         <label asp-for="Quantity"></label>
         <input asp-for="Quantity" class="form-control" />
         <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Images"></label>
+        <input asp-for="Images" class=form-control accept=".jpg,image/jpeg" />
     </div>
 
     <div class="form-group">

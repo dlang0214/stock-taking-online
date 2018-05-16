@@ -18,14 +18,16 @@ namespace StocktakingOnline.Web.Controllers
 	public class InventoryController : Controller
 	{
 		private readonly IInventoryService inventoryService;
+		private readonly IStorageService storageService;
 		private readonly UserManager<DbUser> userManager;
 		private readonly IJobService jobService;
 		private readonly ILogger<InventoryController> logger;
 
-		public InventoryController(IInventoryService inventoryService, UserManager<DbUser> userManager,
+		public InventoryController(IInventoryService inventoryService, IStorageService storageService, UserManager<DbUser> userManager,
 								   IJobService jobService, ILogger<InventoryController> logger)
 		{
 			this.inventoryService = inventoryService;
+			this.storageService = storageService;
 			this.userManager = userManager;
 			this.jobService = jobService;
 			this.logger = logger;
@@ -57,8 +59,25 @@ namespace StocktakingOnline.Web.Controllers
 						UserId = user.UserId,
 						JobId = user.CurrentJobId.Value,
 						ProductId = viewModel.ProductId,
-						Quantity = Convert.ToDecimal(viewModel.Quantity)
+						Quantity = viewModel.Quantity,
+						ImageFiles = new List<string>()
 					};
+
+					//upload files
+					if (viewModel.Images?.Any(f => f.Length > 0) == true)
+					{
+						foreach (var file in viewModel.Images.Where(f => f.Length > 0))
+						{
+							var fileName = $"{user.CurrentJobId}-{user.UserId}-{Guid.NewGuid():N}.jpg";
+							using(var readStream = file.OpenReadStream())
+							{
+								await storageService.UploadStreamToFile(fileName, readStream);
+							}
+							item.ImageFiles.Add(fileName);
+						}
+					}
+
+					//save data to database
 					item = await inventoryService.AddInventoryItem(item);
 				}
 				else

@@ -27,6 +27,8 @@ namespace StocktakingOnline.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddSingleton<IStorageService, StorageService>();
+
 			services.AddScoped<IDbService, DbService>();
 			services.AddScoped<IJobService, JobService>();
 			services.AddScoped<IUserService, UserService>();

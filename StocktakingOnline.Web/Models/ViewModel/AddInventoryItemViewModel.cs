@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+
 namespace StocktakingOnline.Web.Models.ViewModel
 {
 	public class AddInventoryItemViewModel
@@ -14,6 +16,7 @@ namespace StocktakingOnline.Web.Models.ViewModel
 		[Display(Name = "数量")]
 		public uint Quantity { get; set; }
 
-		public IFormFile[] Images { get; set; }
+		[Display(Name ="照片")]
+		public IEnumerable<IFormFile> Images { get; set; }
 	}
 }

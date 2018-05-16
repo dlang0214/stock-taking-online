@@ -10,6 +10,7 @@ using StocktakingOnline.Web.Services.Declaration;
 using Microsoft.AspNetCore.Identity;
 using StocktakingOnline.Web.Models.ViewModel;
 using StocktakingOnline.Web.Models.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace StocktakingOnline.Web.Controllers
 {
@@ -40,7 +41,23 @@ namespace StocktakingOnline.Web.Controllers
 			var user = await userManager.GetUserAsync(HttpContext.User);
 			var vm = new InventoryViewModel();
 			vm.CurrentJob = user.CurrentJobId == null ? null : await jobService.GetJob(user.CurrentJobId.Value);
-			vm.AddInventoryItemViewModel = new AddInventoryItemViewModel();
+			vm.AddInventoryItemViewModel = new AddInventoryItemViewModel()
+			{
+				DepartmentList = new List<SelectListItem>
+				{
+					new SelectListItem{Value = "1", Text="类别1"},
+					new SelectListItem{Value = "2", Text="类别2"},
+					new SelectListItem{Value = "3", Text="类别3"},
+					new SelectListItem{Value = "4", Text="类别4"},
+					new SelectListItem{Value = "5", Text="类别5"},
+					new SelectListItem{Value = "6", Text="类别6"}
+				},
+				BrandList = new List<SelectListItem>
+				{
+					new SelectListItem{Value = "A", Text="苹果产品"},
+					new SelectListItem{Value = "R", Text = "非苹果产品"}
+				}
+			};
 			return View(vm);
 		}
 
@@ -58,9 +75,13 @@ namespace StocktakingOnline.Web.Controllers
 					{
 						UserId = user.UserId,
 						JobId = user.CurrentJobId.Value,
-						ProductId = viewModel.ProductId,
-						Quantity = viewModel.Quantity,
-						ImageFiles = new List<string>()
+						ProductId = viewModel.ProductId ?? string.Empty,
+						Quantity = viewModel.Quantity <= 0 ? 1 : viewModel.Quantity,
+						ImageFiles = new List<string>(),
+						DepartmentId = int.Parse(viewModel.DepartmentId),
+						Brand = viewModel.Brand,
+						Model = viewModel.Model,
+						SerialNumber = viewModel.SerialNumber
 					};
 
 					//upload files
@@ -69,7 +90,7 @@ namespace StocktakingOnline.Web.Controllers
 						foreach (var file in viewModel.Images.Where(f => f.Length > 0))
 						{
 							var fileName = $"{user.CurrentJobId}-{user.UserId}-{Guid.NewGuid():N}.jpg";
-							using(var readStream = file.OpenReadStream())
+							using (var readStream = file.OpenReadStream())
 							{
 								await storageService.UploadStreamToFile(fileName, readStream);
 							}

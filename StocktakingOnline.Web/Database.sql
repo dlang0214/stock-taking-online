@@ -88,8 +88,13 @@ CREATE TABLE InventoryItems
     RecordId NVARCHAR(50) NOT NULL PRIMARY KEY,
     JobId int NOT NULL,
     UserId int NOT NULL,
-    ProductId NVARCHAR(50) NOT NULL,
+    ProductId NVARCHAR(50),
     Quantity DECIMAL(18,5) NOT NULL,
+    DepartmentId int NOT NULL,
+    Brand NVARCHAR(50) NOT NULL,
+    Model NVARCHAR(50),
+    SerialNumber NVARCHAR(50),
+    AssetNumber NVARCHAR(50),
     ImageFiles NVARCHAR(MAX),
     CreatedTime DATETIME NOT NULL
 )

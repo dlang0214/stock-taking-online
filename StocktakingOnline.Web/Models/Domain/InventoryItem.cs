@@ -11,5 +11,10 @@ namespace StocktakingOnline.Web.Models.Domain
 		public int UserId { get; set; }
 		public DateTime CreatedTime { get; set; }
 		public List<string> ImageFiles { get; set; }
+		public int DepartmentId { get; set; }
+		public string AssetNumber { get; set; }
+		public string SerialNumber { get; set; }
+		public string Brand { get; set; }
+		public string Model { get; set; }
 	}
 }

@@ -19,30 +19,39 @@ namespace StocktakingOnline.Web.Services.Implementation
 
 		public async Task<InventoryItem> AddInventoryItem(InventoryItem item)
 		{
-			item.RecordId = GetRecordId(item.JobId, item.UserId);
-			item.CreatedTime = DateTime.Now;
-
-			var dbInventoryItem = new DbInventoryItem
-			{
-				RecordId = item.RecordId,
-				JobId = item.JobId,
-				UserId = item.UserId,
-				ProductId = item.ProductId,
-				Quantity = item.Quantity,
-				CreatedTime = item.CreatedTime,
-				ImageFiles = string.Join(";", item.ImageFiles ?? new List<string>(0))
-			};
 			using (var db = await dbService.GetConnection())
 			{
+				var job = await db.GetAsync<DbJob>(item.JobId);
+				var seqName = $"JobSeq_{item.JobId}";
+				int nextSequenceNumber = await db.ExecuteScalarAsync<int>($@"SELECT NEXT VALUE FOR {seqName};");
+				item.RecordId = GetRecordId(item.JobId, item.UserId, nextSequenceNumber);
+				item.CreatedTime = DateTime.Now;
+				item.AssetNumber = $"{job.JobName}{item.Brand}{nextSequenceNumber:D4}";
+
+				var dbInventoryItem = new DbInventoryItem
+				{
+					RecordId = item.RecordId,
+					JobId = item.JobId,
+					UserId = item.UserId,
+					ProductId = item.ProductId,
+					Quantity = item.Quantity,
+					CreatedTime = item.CreatedTime,
+					ImageFiles = string.Join(";", item.ImageFiles ?? new List<string>(0)),
+					Brand = item.Brand,
+					Model = item.Model,
+					AssetNumber = item.AssetNumber,
+					DepartmentId = item.DepartmentId,
+					SerialNumber = item.SerialNumber
+				};
 				await db.InsertAsync<string, DbInventoryItem>(dbInventoryItem);
 			}
 
 			return item;
 		}
 
-		private string GetRecordId(int jobId, int userId)
+		private string GetRecordId(int jobId, int userId, int seqNumber)
 		{
-			return Guid.NewGuid().ToString("N");
+			return $"{jobId:D4}{userId:D4}{seqNumber:D6}";
 		}
 
 		public async Task AddPicture(string recordId, string imageFileName)

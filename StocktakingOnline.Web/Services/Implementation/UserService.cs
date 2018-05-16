@@ -21,6 +21,11 @@ namespace StocktakingOnline.Web.Services.Implementation
 			using (var db = await dbService.GetConnection())
 			{
 				var result = await db.UpdateAsync(user);
+				//Create Sequence for this job
+				var seqName = $"JobSeq_{jobId}";
+				await db.ExecuteAsync(
+					$@"IF NOT EXISTS (SELECT * from sys.objects WHERE name='{seqName}') 
+					CREATE SEQUENCE {seqName} START WITH 1 INCREMENT BY 1;");
 				return result == 1;
 			}
 		}

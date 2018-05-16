@@ -5,6 +5,7 @@ using StocktakingOnline.Web.Services.Declaration;
 using StocktakingOnline.Web.Models.Database;
 using Dapper;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StocktakingOnline.Web.Services.Implementation
 {
@@ -100,6 +101,15 @@ namespace StocktakingOnline.Web.Services.Implementation
 			using (var db = await dbService.GetConnection())
 			{
 				await db.DeleteAsync<DbInventoryItem>(recordId);
+			}
+		}
+
+		public async Task<List<DbViewInventoryItem>> GetInventoryItemsOfJob(int jobId)
+		{
+			using (var db = await dbService.GetConnection())
+			{
+				var dbItems = await db.GetListAsync<DbViewInventoryItem>(new { JobId = jobId });
+				return dbItems.ToList();
 			}
 		}
 	}

@@ -48,6 +48,7 @@
     <Folder Include="Models\Domain\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Inventory\" />
+    <Folder Include="Views\Preview\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="SimpleCRUDAsync.cs" />

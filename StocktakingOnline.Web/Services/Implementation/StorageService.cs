@@ -39,6 +39,8 @@ namespace StocktakingOnline.Web.Services.Implementation
 		{
 			var blob = imageContainer.GetBlockBlobReference(fileName);
 			await blob.UploadFromStreamAsync(stream);
+			blob.Properties.ContentType = "image/jpeg";
+			await blob.SetPropertiesAsync();
 		}
 	}
 }

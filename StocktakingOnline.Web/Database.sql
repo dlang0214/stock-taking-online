@@ -99,3 +99,19 @@ CREATE TABLE InventoryItems
     CreatedTime DATETIME NOT NULL
 )
 GO
+
+--类别表
+CREATE TABLE Department
+(
+    DepartmentId INT PRIMARY KEY,
+    DepartmentName NVARCHAR(50) NOT NULL
+)
+GO
+
+--查询数据视图
+CREATE VIEW InventoryItemsView AS
+    SELECT ii.*, dpt.DepartmentName, u.DisplayName
+    FROM InventoryItems ii
+    LEFT JOIN Department dpt ON ii.DepartmentId=dpt.DepartmentId
+    LEFT JOIN Users u ON ii.UserId=u.UserId
+GO

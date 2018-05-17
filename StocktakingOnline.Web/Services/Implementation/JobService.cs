@@ -46,7 +46,10 @@ namespace StocktakingOnline.Web.Services.Implementation
 					JobName = j.JobName,
 					JobDescription = j.JobDescription,
 					IsOpened = j.IsOpened
-				}).ToList();
+				})
+			   .OrderBy(j => j.IsOpened ? 0 : 1)
+			   .ThenBy(j => j.JobName)
+			   .ToList();
 			}
 		}
 	}

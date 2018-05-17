@@ -19,15 +19,18 @@ namespace StocktakingOnline.Web.Controllers
 	public class InventoryController : Controller
 	{
 		private readonly IInventoryService inventoryService;
+		private readonly IDepartmentService departmentService;
 		private readonly IStorageService storageService;
 		private readonly UserManager<DbUser> userManager;
 		private readonly IJobService jobService;
 		private readonly ILogger<InventoryController> logger;
 
-		public InventoryController(IInventoryService inventoryService, IStorageService storageService, UserManager<DbUser> userManager,
+		public InventoryController(IInventoryService inventoryService, IDepartmentService departmentService,
+								   IStorageService storageService, UserManager<DbUser> userManager,
 								   IJobService jobService, ILogger<InventoryController> logger)
 		{
 			this.inventoryService = inventoryService;
+			this.departmentService = departmentService;
 			this.storageService = storageService;
 			this.userManager = userManager;
 			this.jobService = jobService;
@@ -39,19 +42,16 @@ namespace StocktakingOnline.Web.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var user = await userManager.GetUserAsync(HttpContext.User);
+			var departments = await departmentService.GetDepartments();
 			var vm = new InventoryViewModel();
 			vm.CurrentJob = user.CurrentJobId == null ? null : await jobService.GetJob(user.CurrentJobId.Value);
 			vm.AddInventoryItemViewModel = new AddInventoryItemViewModel()
 			{
-				DepartmentList = new List<SelectListItem>
+				DepartmentList = departments.Select(d => new SelectListItem
 				{
-					new SelectListItem{Value = "1", Text="类别1"},
-					new SelectListItem{Value = "2", Text="类别2"},
-					new SelectListItem{Value = "3", Text="类别3"},
-					new SelectListItem{Value = "4", Text="类别4"},
-					new SelectListItem{Value = "5", Text="类别5"},
-					new SelectListItem{Value = "6", Text="类别6"}
-				},
+					Value = d.DepartmentId.ToString(),
+					Text = d.DepartmentName
+				}).ToList(),
 				BrandList = new List<SelectListItem>
 				{
 					new SelectListItem{Value = "A", Text="苹果产品"},

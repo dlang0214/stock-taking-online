@@ -37,6 +37,7 @@ namespace StocktakingOnline.Web
 			services.AddScoped<IJobService, JobService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IInventoryService, InventoryService>();
+			services.AddScoped<IDepartmentService, DepartmentService>();
 
 			services.AddDistributedMemoryCache();
 			services.AddSession();
@@ -77,7 +78,6 @@ namespace StocktakingOnline.Web
 			GlobalDiagnosticsContext.Set("nlogDbConnection", Configuration.GetConnectionString("DefaultConnection"));
 			GlobalDiagnosticsContext.Set("appName", Configuration["AppName"]);
 			loggerFactory.AddNLog();
-			app.AddNLogWeb();
 
 			app.UseStaticFiles();
 

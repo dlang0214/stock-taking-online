@@ -25,6 +25,7 @@ else
                 <th>品牌</th>
                 <th>型号</th>
                 <th>序列号</th>
+                <th>时间</th>
                 <th>照片</th>
             </tr>
         </thead>
@@ -37,6 +38,7 @@ else
                     <td>@item.Brand</td>
                     <td>@item.Model</td>
                     <td>@item.SerialNumber</td>
+                    <td>@item.CreatedTime.ToString("yyyy-MM-dd hh:mm")</td>
                     <td>
                         @foreach (var imgName in item.ImageFiles.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                         {

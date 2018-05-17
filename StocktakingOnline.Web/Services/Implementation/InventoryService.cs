@@ -109,7 +109,7 @@ namespace StocktakingOnline.Web.Services.Implementation
 			using (var db = await dbService.GetConnection())
 			{
 				var dbItems = await db.GetListAsync<DbViewInventoryItem>(new { JobId = jobId });
-				return dbItems.ToList();
+				return dbItems.OrderBy(item=>item.CreatedTime).ToList();
 			}
 		}
 	}

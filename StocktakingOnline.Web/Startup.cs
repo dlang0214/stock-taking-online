@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace StocktakingOnline.Web
 {
@@ -76,6 +77,7 @@ namespace StocktakingOnline.Web
 			GlobalDiagnosticsContext.Set("nlogDbConnection", Configuration.GetConnectionString("DefaultConnection"));
 			GlobalDiagnosticsContext.Set("appName", Configuration["AppName"]);
 			loggerFactory.AddNLog();
+			app.AddNLogWeb();
 
 			app.UseStaticFiles();
 

@@ -52,7 +52,7 @@ namespace StocktakingOnline.Web.Controllers
 				var result = await signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
 				if (result.Succeeded)
 				{
-					logger.LogInformation("User logged in.");
+					logger.LogInformation($"User {model.UserName} logged in.");
 					return RedirectToLocal(returnUrl);
 				}
 				else
@@ -92,10 +92,9 @@ namespace StocktakingOnline.Web.Controllers
 				var result = await userManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)
 				{
-					logger.LogInformation("User created a new account with password.");
+					logger.LogInformation($"User created a new account {user.UserName} with password.");
 
 					await signInManager.SignInAsync(user, isPersistent: false);
-					logger.LogInformation("User created a new account with password.");
 					return RedirectToLocal(returnUrl);
 				}
 				else

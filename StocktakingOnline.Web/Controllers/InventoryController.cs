@@ -100,6 +100,8 @@ namespace StocktakingOnline.Web.Controllers
 
 					//save data to database
 					item = await inventoryService.AddInventoryItem(item);
+
+					logger.LogInformation($"User {user.UserName}({user.DisplayName}) add new item to job {item.JobId} with {item.ImageFiles.Count} pictures");
 				}
 				else
 				{

@@ -38,7 +38,7 @@ else
                     <td>@item.Model</td>
                     <td>@item.SerialNumber</td>
                     <td>
-                        @foreach (var imgName in item.ImageFiles.Split(";"))
+                        @foreach (var imgName in item.ImageFiles.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                         {
                             var url = storageService.GetFileDownloadUrl(imgName);
                             if (!string.IsNullOrWhiteSpace(url))

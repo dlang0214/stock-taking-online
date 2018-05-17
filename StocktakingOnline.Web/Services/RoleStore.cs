@@ -23,7 +23,7 @@ namespace StocktakingOnline.Web.Services
 			using (var db = await dbService.GetConnection())
 			{
 				var result = await db.InsertAsync(role);
-				return result == 1 ? IdentityResult.Success : IdentityResult.Failed();
+				return result > 0 ? IdentityResult.Success : IdentityResult.Failed();
 			}
 		}
 

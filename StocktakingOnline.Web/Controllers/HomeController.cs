@@ -43,6 +43,7 @@ namespace StocktakingOnline.Web.Controllers
 		{
 			var user = await userManager.GetUserAsync(HttpContext.User);
 			await userService.SwitchToJob(user, jobId);
+			logger.LogInformation($"User {user.UserName}({user.DisplayName}) switch to job {jobId}");
 			return new RedirectToActionResult("Index", "Home", null);
 		}
 

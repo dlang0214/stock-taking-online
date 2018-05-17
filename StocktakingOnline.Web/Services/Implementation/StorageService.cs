@@ -26,6 +26,10 @@ namespace StocktakingOnline.Web.Services.Implementation
 
 		public string GetFileDownloadUrl(string fileName)
 		{
+			if (string.IsNullOrWhiteSpace(fileName))
+			{
+				return null;
+			}
 			var blob = imageContainer.GetBlockBlobReference(fileName);
 			var sas = blob.GetSharedAccessSignature(new SharedAccessBlobPolicy
 			{
@@ -37,6 +41,10 @@ namespace StocktakingOnline.Web.Services.Implementation
 
 		public async Task UploadStreamToFile(string fileName, Stream stream)
 		{
+			if (string.IsNullOrWhiteSpace(fileName) || stream == null)
+			{
+				return;
+			}
 			var blob = imageContainer.GetBlockBlobReference(fileName);
 			await blob.UploadFromStreamAsync(stream);
 			blob.Properties.ContentType = "image/jpeg";

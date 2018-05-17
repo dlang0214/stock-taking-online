@@ -15,6 +15,8 @@ namespace StocktakingOnline.Web.Services.Declaration
 
 		Task RemovePicture(string recordId, string imageFileName);
 
-		Task<List<DbViewInventoryItem>> GetInventoryItemsOfJob(int jobId);
+		Task<List<InventoryItem>> GetInventoryItemsOfJob(int jobId);
+
+		Task<InventoryItem> GetLastInventoryItemOfUser(int jobId, int userId);
 	}
 }

@@ -12,6 +12,10 @@ using Microsoft.AspNetCore.Identity;
 using StocktakingOnline.Web.Models.Database;
 using StocktakingOnline.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace StocktakingOnline.Web
 {
@@ -33,6 +37,7 @@ namespace StocktakingOnline.Web
 			services.AddScoped<IJobService, JobService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IInventoryService, InventoryService>();
+			services.AddScoped<IDepartmentService, DepartmentService>();
 
 			services.AddDistributedMemoryCache();
 			services.AddSession();
@@ -59,7 +64,7 @@ namespace StocktakingOnline.Web
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
 			if (env.IsDevelopment())
 			{
@@ -69,6 +74,10 @@ namespace StocktakingOnline.Web
 			{
 				app.UseExceptionHandler("/Home/Error");
 			}
+
+			GlobalDiagnosticsContext.Set("nlogDbConnection", Configuration.GetConnectionString("DefaultConnection"));
+			GlobalDiagnosticsContext.Set("appName", Configuration["AppName"]);
+			loggerFactory.AddNLog();
 
 			app.UseStaticFiles();
 

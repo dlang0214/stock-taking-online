@@ -79,6 +79,7 @@ namespace StocktakingOnline.Web.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
 		{
+			logger.LogInformation($"Register userName={model.UserName} displayName={model.DisplayName}");
 			ViewData["ReturnUrl"] = returnUrl;
 			if (ModelState.IsValid)
 			{
@@ -97,7 +98,18 @@ namespace StocktakingOnline.Web.Controllers
 					logger.LogInformation("User created a new account with password.");
 					return RedirectToLocal(returnUrl);
 				}
-				AddErrors(result);
+				else
+				{
+					AddErrors(result);
+					foreach (var err in result.Errors)
+					{
+						logger.LogWarning($"Register error code={err.Code} description={err.Description}");
+					}
+				}
+			}
+			else
+			{
+				logger.LogWarning("Register model is not valid");
 			}
 
 			// If we got this far, something failed, redisplay form

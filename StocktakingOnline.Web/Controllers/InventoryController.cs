@@ -56,8 +56,12 @@ namespace StocktakingOnline.Web.Controllers
 				{
 					new SelectListItem{Value = "A", Text="苹果产品"},
 					new SelectListItem{Value = "R", Text = "非苹果产品"}
-				}
+				},
+				Brand = "A"
 			};
+			vm.LastAddedInventoryItem = user.CurrentJobId == null ? null :
+				await inventoryService.GetLastInventoryItemOfUser(user.CurrentJobId.Value, user.UserId);
+
 			return View(vm);
 		}
 

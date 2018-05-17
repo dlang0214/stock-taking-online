@@ -6,5 +6,6 @@ namespace StocktakingOnline.Web.Models.ViewModel
 	{
 		public Job CurrentJob { get; set; }
 		public AddInventoryItemViewModel AddInventoryItemViewModel { get; set; }
+		public InventoryItem LastAddedInventoryItem { get; set; }
 	}
 }

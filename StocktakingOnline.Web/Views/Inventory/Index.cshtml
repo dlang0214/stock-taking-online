@@ -16,6 +16,7 @@ else if (!Model.CurrentJob.IsOpened)
 }
 else
 {
+    <h3>开始盘点</h3>
     <div>
         <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
     </div>
@@ -23,4 +24,51 @@ else
     <div>
         @await Html.PartialAsync("AddInventoryItem", Model.AddInventoryItemViewModel)
     </div>
+
+    @if (Model.LastAddedInventoryItem != null)
+    {
+        <hr />
+        <div>
+            <h4>最近向此盘点工作中录入的数据：</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>录入时间</td>
+                        <td>@Model.LastAddedInventoryItem.CreatedTime.ToString("yyyy-MM-dd hh:mm:ss")</td>
+                    </tr>
+                    <tr>
+                        <td>资产编号</td>
+                        <td>@Model.LastAddedInventoryItem.AssetNumber</td>
+                    </tr>
+                    <tr>
+                        <td>类别</td>
+                        <td>@Model.LastAddedInventoryItem.DepartmentName</td>
+                    </tr>
+                    <tr>
+                        <td>品牌</td>
+                        <td>@Model.LastAddedInventoryItem.Brand</td>
+                    </tr>
+                    <tr>
+                        <td>型号</td>
+                        <td>@Model.LastAddedInventoryItem.Model</td>
+                    </tr>
+                    <tr>
+                        <td>序列号</td>
+                        <td>@Model.LastAddedInventoryItem.SerialNumber</td>
+                    </tr>
+                    <tr>
+                        <td>照片数量</td>
+                        <td>@Model.LastAddedInventoryItem.ImageFiles.Count</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    }
 }

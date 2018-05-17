@@ -104,13 +104,47 @@ namespace StocktakingOnline.Web.Services.Implementation
 			}
 		}
 
-		public async Task<List<DbViewInventoryItem>> GetInventoryItemsOfJob(int jobId)
+		public async Task<List<InventoryItem>> GetInventoryItemsOfJob(int jobId)
 		{
 			using (var db = await dbService.GetConnection())
 			{
 				var dbItems = await db.GetListAsync<DbViewInventoryItem>(new { JobId = jobId });
-				return dbItems.OrderBy(item=>item.CreatedTime).ToList();
+				return dbItems.Select(DbViewToDomainInventoryItem).OrderBy(item => item.CreatedTime).ToList();
 			}
+		}
+
+		public async Task<InventoryItem> GetLastInventoryItemOfUser(int jobId, int userId)
+		{
+			using (var db = await dbService.GetConnection())
+			{
+				var dbItems = await db.GetListPagedAsync<DbViewInventoryItem>(1, 1,
+							"where JobId=@JobId and UserId=@UserId", "CreatedTime desc",
+							new { JobId = jobId, UserId = userId });
+				var item = dbItems.FirstOrDefault();
+				return DbViewToDomainInventoryItem(item);
+			}
+		}
+
+		private static InventoryItem DbViewToDomainInventoryItem(DbViewInventoryItem item)
+		{
+			if (item == null) return null;
+			return new InventoryItem
+			{
+				RecordId = item.RecordId,
+				JobId = item.JobId,
+				UserId = item.UserId,
+				ProductId = item.ProductId,
+				Quantity = item.Quantity,
+				CreatedTime = item.CreatedTime,
+				ImageFiles = item.ImageFiles?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>(0),
+				Brand = item.Brand,
+				Model = item.Model,
+				AssetNumber = item.AssetNumber,
+				DepartmentId = item.DepartmentId,
+				DepartmentName = item.DepartmentName,
+				SerialNumber = item.SerialNumber,
+				UserDisplayName = item.DisplayName
+			};
 		}
 	}
 }

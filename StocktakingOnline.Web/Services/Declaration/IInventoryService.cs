@@ -9,6 +9,8 @@ namespace StocktakingOnline.Web.Services.Declaration
 	{
 		Task<InventoryItem> AddInventoryItem(InventoryItem item);
 
+		Task EditInventoryItemWithoutPicture(string recordId, InventoryItem item);
+
 		Task DeleteInventoryItem(string recordId);
 
 		Task AddPicture(string recordId, string imageFileName);
@@ -18,5 +20,7 @@ namespace StocktakingOnline.Web.Services.Declaration
 		Task<List<InventoryItem>> GetInventoryItemsOfJob(int jobId);
 
 		Task<InventoryItem> GetLastInventoryItemOfUser(int jobId, int userId);
+
+		Task<InventoryItem> GetInventoryItemByRecordId(string recordId);
 	}
 }

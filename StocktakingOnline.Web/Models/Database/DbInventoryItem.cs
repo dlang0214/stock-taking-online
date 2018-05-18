@@ -29,4 +29,18 @@ namespace StocktakingOnline.Web.Models.Database
 		public string RecordId { get; set; }
 		public string ImageFiles { get; set; }
 	}
+
+	[Table("InventoryItems")]
+	public class DbInventoryItem_Edit
+	{
+		[Key]
+		[Required]
+		public string RecordId { get; set; }
+		public string ProductId { get; set; }
+		public decimal Quantity { get; set; }
+		public int DepartmentId { get; set; }
+		public string SerialNumber { get; set; }
+		public string Brand { get; set; }
+		public string Model { get; set; }
+	}
 }

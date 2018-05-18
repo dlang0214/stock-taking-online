@@ -146,5 +146,29 @@ namespace StocktakingOnline.Web.Services.Implementation
 				UserDisplayName = item.DisplayName
 			};
 		}
+
+		public async Task<InventoryItem> GetInventoryItemByRecordId(string recordId)
+		{
+			using (var db = await dbService.GetConnection())
+			{
+				var item = await db.GetAsync<DbViewInventoryItem>(recordId);
+				return DbViewToDomainInventoryItem(item);
+			}
+		}
+
+		public async Task EditInventoryItemWithoutPicture(string recordId, InventoryItem item)
+		{
+			using (var db = await dbService.GetConnection())
+			{
+				var job = await db.GetAsync<DbInventoryItem_Edit>(recordId);
+				job.ProductId = item.ProductId;
+				job.DepartmentId = item.DepartmentId;
+				job.Quantity = Math.Max(job.Quantity, 1);
+				job.Brand = item.Brand;
+				job.Model = item.Model;
+				job.SerialNumber = item.SerialNumber;
+				await db.UpdateAsync(job);
+			}
+		}
 	}
 }

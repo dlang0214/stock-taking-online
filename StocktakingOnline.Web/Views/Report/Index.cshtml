@@ -1,0 +1,113 @@
+﻿@using StocktakingOnline.Web.Services.Declaration
+@using StocktakingOnline.Web.Models.ViewModel
+@model ReportViewModel
+@inject IStorageService storageService
+@{
+    Layout = null;
+    var l10n = Model.LocalizationConfiguration;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@l10n["Title"] - @Model.CurrentJob.JobName @Model.CurrentJob.JobDescription</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style type="text/css">
+        table {
+            page-break-inside: avoid
+        }
+
+        .table > tbody > tr > td {
+            padding: 3px;
+            line-height: 1.1;
+            font-size: 13px;
+            font-family: Courier New, Courier, monospace
+        }
+    </style>
+    <script>
+        window.addEventListener("load", function(event) {
+            window.print();
+        });
+</script>
+</head>
+<body>
+    <!--report title-->
+    <div class="container">
+        <div class="row">
+            <!-- logo -->
+            <div class="col-md-3 col-sm-3 col-xs-3">
+                <img src="@l10n["LogoImage"] " height="60" />
+            </div>
+            <!-- title -->
+            <div class="col-md-9 col-sm-9 col-xs-9">
+                <h2>@l10n["Title"]</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-9 col-md-3 col-sm-offset-9 col-sm-3 col-xs-offset-9 col-xs-3">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td>@l10n["JobName"]</td>
+                            <td>@Model.CurrentJob.JobName</td>
+                        </tr>
+                        <tr>
+                            <td>@l10n["JobDescription"]</td>
+                            <td>@Model.CurrentJob.JobDescription</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @foreach (var item in Model.Items)
+        {
+            <hr />
+            <table class="table table-condensed">
+                <tbody>
+                    <tr>
+                        <td style="width:180px">@l10n["DepartmentName"]</td>
+                        <td style="width:200px">@item.DepartmentName</td>
+                        <td rowspan="5">
+                            @foreach (var fileName in item.ImageFiles)
+                            {
+                                <img src="@storageService.GetFileDownloadUrl(fileName)" height="100" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@l10n["Brand"]</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(l10n["BrandList:" + item.Brand]))
+                            {
+                                <span>@l10n["BrandList:" + item.Brand]</span>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(l10n["BrandList:Default"]))
+                            {
+                                <span>@l10n["BrandList:Default"]</span>
+                            }
+                            else
+                            {
+                                <span>@item.Brand</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@l10n["Model"]</td>
+                        <td>@item.Model</td>
+                    </tr>
+                    <tr>
+                        <td>@l10n["SerialNumber"]</td>
+                        <td>@item.SerialNumber</td>
+                    </tr>
+                    <tr>
+                        <td>@l10n["AssetNumber"]</td>
+                        <td>@item.AssetNumber</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </div>
+</body>
+</html>

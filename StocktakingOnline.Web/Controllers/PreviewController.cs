@@ -17,18 +17,15 @@ namespace StocktakingOnline.Web.Controllers
 	public class PreviewController : Controller
 	{
 		private readonly IInventoryService inventoryService;
-		private readonly IDbService dbService;
 		private readonly IDepartmentService departmentService;
 		private readonly IJobService jobService;
 		private readonly UserManager<DbUser> userManager;
 		private readonly ILogger<PreviewController> logger;
 
-		public PreviewController(IInventoryService inventoryService, IDbService dbService,
-								 IDepartmentService departmentService,
+		public PreviewController(IInventoryService inventoryService, IDepartmentService departmentService,
 								 IJobService jobService, UserManager<DbUser> userManager, ILogger<PreviewController> logger)
 		{
 			this.inventoryService = inventoryService;
-			this.dbService = dbService;
 			this.departmentService = departmentService;
 			this.jobService = jobService;
 			this.userManager = userManager;

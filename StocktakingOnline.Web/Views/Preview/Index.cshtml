@@ -4,55 +4,90 @@
 @{
     ViewData["Title"] = "浏览盘点数据";
 }
+<link type="text/css" rel="stylesheet" href="~/lib/datatables.net-dt/css/jquery.dataTables.min.css" />
 @if (Model.CurrentJob == null)
 {
-    <div>
+    <div class="col-sm-12">
         <p>当前没有进入盘点工作，请先到“工作列表”页面选择一个工作项目。</p>
     </div>
 }
 else
 {
-    <div>
-        <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
-        <p>状态：@(Model.CurrentJob.IsOpened ? "进行中" : "已结束")</p>
+    <div class="col-sm-12 text-center">
+        <h3>盘点结果</h3>
     </div>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>资产编号</th>
-                <th>类别</th>
-                <th>品牌</th>
-                <th>型号</th>
-                <th>序列号</th>
-                <th>盘点者</th>
-                <th>时间</th>
-                <th>照片</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
+    <div class="col-sm-12">
+        <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
+        <p>
+            状态：
+            @if (Model.CurrentJob.IsOpened)
             {
-                <tr>
-                    <td>@item.AssetNumber</td>
-                    <td>@item.DepartmentName</td>
-                    <td>@item.Brand</td>
-                    <td>@item.Model</td>
-                    <td>@item.SerialNumber</td>
-                    <td>@item.UserDisplayName</td>
-                    <td>@item.CreatedTime.ToString("yyyy-MM-dd hh:mm")</td>
-                    <td>
-                        @foreach (var imgName in item.ImageFiles)
-                        {
-                            var url = storageService.GetFileDownloadUrl(imgName);
-                            if (!string.IsNullOrWhiteSpace(url))
-                            {
-                                <a href="@url" target="_blank"><img src="@url" height="60" /></a>
-                            }
-                        }
-                    </td>
-                </tr>
+                <span class="label label-success">(进行中)</span>
             }
-        </tbody>
-    </table>
+            else
+            {
+                <span class="label label-warning">(已结束)</span>
+            }
+        </p>
+    </div>
+    <div class="col-sm-12">
+        <table class="display table" id="assetInfo">
+            <thead>
+                <tr>
+                    <th class="dt-head-center">资产编号</th>
+                    <th class="dt-head-center">类别</th>
+                    <th class="dt-head-center">品牌</th>
+                    <th class="dt-head-center">型号</th>
+                    <th class="dt-head-center">序列号</th>
+                    <th class="dt-head-center">盘点者</th>
+                    <th class="dt-head-center">时间</th>
+                    <th class="dt-head-center">照片</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.AssetNumber</td>
+                        <td>@item.DepartmentName</td>
+                        <td class="dt-body-center">@item.Brand</td>
+                        <td class="dt-body-center">@item.Model</td>
+                        <td class="dt-body-center">@item.SerialNumber</td>
+                        <td class="dt-body-center">@item.UserDisplayName</td>
+                        <td class="dt-body-center">@item.CreatedTime.ToString("yyyy-MM-dd hh:mm")</td>
+                        <td>
+                            @foreach (var imgName in item.ImageFiles)
+                            {
+                                var url = storageService.GetFileDownloadUrl(imgName);
+                                if (!string.IsNullOrWhiteSpace(url))
+                                {
+                                    <a href="@url" target="_blank"><img src="@url" height="60" /></a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix">
+
+
+    </div>
+}
+
+@section Scripts
+    {
+    <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
+
+    <script>$(document).ready(function() {
+            $('#assetInfo').DataTable({
+                "paging": false,
+                "searching": false,
+                "bInfo": false
+
+            })
+
+});</script>
+
 }

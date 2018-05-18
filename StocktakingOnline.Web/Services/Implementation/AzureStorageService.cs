@@ -8,12 +8,12 @@ using System.IO;
 
 namespace StocktakingOnline.Web.Services.Implementation
 {
-	public class StorageService : IStorageService
+	public class AzureStorageService : IStorageService
 	{
 		private readonly IConfiguration configuration;
 		private readonly CloudBlobContainer imageContainer;
 
-		public StorageService(IConfiguration configuration)
+		public AzureStorageService(IConfiguration configuration)
 		{
 			this.configuration = configuration;
 			var account = CloudStorageAccount.Parse(configuration.GetConnectionString("StorageConnection"));

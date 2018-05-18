@@ -52,4 +52,9 @@
   <ItemGroup>
     <Compile Remove="SimpleCRUDAsync.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Aliyun.OSS">
+      <HintPath>..\References\Aliyun.OSS.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

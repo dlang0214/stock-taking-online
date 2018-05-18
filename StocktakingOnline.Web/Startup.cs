@@ -31,7 +31,21 @@ namespace StocktakingOnline.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddSingleton<IStorageService, StorageService>();
+			switch (Configuration["CloudStorage:Provider"]?.ToLowerInvariant())
+			{
+				case "azure":
+					services.AddSingleton<IStorageService, AzureStorageService>();
+					break;
+				case "aliyun":
+					services.AddSingleton<IStorageService, AliyunStorageService>();
+					break;
+				case "local":
+					services.AddSingleton<IStorageService, LocalStorageService>();
+					break;
+				default:
+					services.AddSingleton<IStorageService, LocalStorageService>();
+					break;
+			}
 
 			services.AddScoped<IDbService, DbService>();
 			services.AddScoped<IJobService, JobService>();

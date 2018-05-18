@@ -24,20 +24,21 @@
         _background-color: #a0a0a0;
         /* 解决IE6的不透明问题 */
     }
+
     #editPanel {
         width: 80%;
         z-index: 101;
         display: none;
         position: absolute;
-        height:60%;
+        height: 60%;
         top: 20%;
     }
-    .cw{
-        color:white;
+
+    .cw {
+        color: white;
     }
 
-
-</style>
+    </style>
 @if (Model.CurrentJob == null)
 {
     <div class="col-sm-12">
@@ -206,7 +207,35 @@ function loadDepartment() {
                 }
             });
 }
+        function loadInventoryItemAfterEdit(recordId){
+            $.ajax({
+                    type: "Get",
+                    url: "/Preview/Items/" + recordId,
+                    success: function(result) {
+                        $("tr[data="+recordId+"]").find("td[data='model']").text(result.model);
+                        $("tr[data="+recordId+"]").find("td[data='department']").text(result.departmentName);
+                        $("tr[data="+recordId+"]").find("td[data='brand']").text(result.brand);
+                        $("tr[data="+recordId+"]").find("td[data='sn']").text(result.serialNumber);
+                    },
+                    error: function(xhr, status, error) {
+                        alert("获取失败，刷新页面后重试");
 
+                    }
+                })
+        }
+        function validateData(){
+             var model = $('#txt_model').val();
+             var sn = $('#txt_SerialNumber').val();
+            if(model.trim()==""||sn.trim()==""){
+                alert("型号和序列号不能为空！");
+                return false;
+            }
+        if(model.length>=50||sn.length>=50){
+                alert("型号和序列号的最大长度为50");
+                return false;
+            }
+        
+        }
 
 
 
@@ -266,6 +295,14 @@ $(document).ready(function() {
                 var brand = $("input[name='brand']:checked").val();
                 var model = $('#txt_model').val();
                 var sn = $('#txt_SerialNumber').val();
+                @*if(model.trim()==""||sn.trim()==""){
+                    alert("型号和序列号不能为空！");
+                    return;
+                }*@
+                if(model.length>50||sn.length>50){
+                    alert("型号和序列号的最大长度为50");
+                    return false;
+                }
                 var data = {
                     departmentId: departmentId,
                     brand: brand,
@@ -278,7 +315,7 @@ $(document).ready(function() {
                     url: "/Preview/Items/" + recordId,
                     data: data,
                     success: function(result) {
-                        window.location.reload();
+                       loadInventoryItemAfterEdit(recordId)
                     },
                     error: function() {
                         alert('保存失败！');

@@ -3,13 +3,27 @@
     ViewData["Title"] = "工作列表";
     var currentJob = Model.Jobs.SingleOrDefault(j => j.JobId == Model.UserCurrentJobId);
 }
+<style>
+    .mt10 {
+        margin-top: 10px;
+    }
 
-<div>
+    .mb10 {
+        margin-bottom: 10px;
+    }
+
+    .mb20 {
+        margin-bottom: 20px;
+    }
+</style>
+<link type="text/css" rel="stylesheet" href="~/lib/datatables.net-dt/css/jquery.dataTables.min.css" />
+
+<div class="col-sm-6 col-sm-offset-6 text-right mb10">
     欢迎您，@Model.UserDisplayName
-    <a asp-controller="Account" asp-action="Logout">注销登录</a>
+    <a asp-controller="Account" asp-action="Logout">注销</a>
 </div>
 
-<div>
+<div class="col-sm-12 text-left mb20">
     当前您所在工作：
     @if (currentJob == null)
     {
@@ -20,43 +34,70 @@
         <strong>[@currentJob.JobName] @currentJob.JobDescription</strong>
         @if (currentJob.IsOpened)
         {
-            <span>(进行中)</span>
+            <span class="label label-success">(进行中)</span>
         }
         else
         {
-            <span>(已结束)</span>
+            <span class="label label-warning">(已结束)</span>
         }
-        <a asp-controller="Inventory" asp-action="Index" class="btn btn-primary btn-sm">开始盘点</a>
+
     }
 </div>
+<div class="col-sm-12 text-left mb20">
+    <a asp-controller="Inventory" asp-action="Index" class="btn btn-primary btn-sm">开始盘点</a>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>工作编号</th>
-            <th>描述</th>
-            <th>状态</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var job in Model.Jobs)
-        {
+<div class="col-sm-12">
+    <table class="table display" id="userJob">
+        <thead>
             <tr>
-                <td>@job.JobName</td>
-                <td>@job.JobDescription</td>
-                <td>
-                    @(job.IsOpened ? "进行中" : "已结束")
-                </td>
-                <td>
-                    @if (job.JobId != Model.UserCurrentJobId && job.IsOpened)
-                    {
-                        <a asp-controller="Home" asp-action="SwitchJob" asp-route-jobId="@job.JobId">切换工作</a>
-                    }
-                </td>
+                <th class="dt-head-center">工作编号</th>
+                <th class="dt-head-center">描述</th>
+                <th class="dt-head-center">状态</th>
+                <th class="dt-head-center">操作</th>
             </tr>
-        }
-    </tbody>
+        </thead>
+        <tbody>
+            @foreach (var job in Model.Jobs)
+            {
+                <tr>
+                    <td>@job.JobName</td>
+                    <td>@job.JobDescription</td>
+                    <td class="dt-body-center">
+                        @(job.IsOpened ? "进行中" : "已结束")
+                    </td>
+                    <td class="dt-body-center">
+                        @if (job.JobId != Model.UserCurrentJobId && job.IsOpened)
+                        {
+                            <a asp-controller="Home" asp-action="SwitchJob" asp-route-jobId="@job.JobId">切换工作</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
 
-</table>
+    </table>
+
+</div>
+<div class="clearfix">
+
+
+</div>
+
+@section Scripts {
+    <script src="~/lib/datatables.net/js/jquery.dataTables.min.js">
+
+    </script>
+
+    <script>$(document).ready(function() {
+            $('#userJob').DataTable({
+                "paging": false,
+                "searching": false,
+                "bInfo": false
+
+            })
+
+});</script>
+
+}
 

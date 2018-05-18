@@ -4,32 +4,36 @@
 }
 @if (Model.CurrentJob == null)
 {
-    <div>
+    <div class="col-sm-12">
         <p>当前没有进入盘点工作，请先到“工作列表”页面选择一个工作项目。</p>
     </div>
 }
 else if (!Model.CurrentJob.IsOpened)
 {
-    <div>
+    <div class="col-sm-12">
         <p>当前盘点工作<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong>已经结束。</p>
     </div>
 }
 else
 {
-    <h3>开始盘点</h3>
-    <div>
+    <div class="col-sm-12 text-center">
+        <h3>开始盘点</h3>
+    </div>
+
+    <div class="col-sm-12 text-left">
         <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
     </div>
 
-    <div>
+    <div class="col-sm-12 text-left">
         @await Html.PartialAsync("AddInventoryItem", Model.AddInventoryItemViewModel)
     </div>
 
     @if (Model.LastAddedInventoryItem != null)
     {
         <hr />
-        <div>
+        <div class="col-sm-12 text-left">
             <h4>最近向此盘点工作中录入的数据：</h4>
+
             <table class="table">
                 <thead>
                     <tr>

@@ -110,8 +110,12 @@ namespace StocktakingOnline.Web.Controllers
 			//必须处于当前job且是当前用户录入的数据才可以删除
 			if (item == null || user == null || item.JobId != user.CurrentJobId.GetValueOrDefault()) //item.UserId != user.UserId
 			{
+				return;
+			}
+			else{
 				await inventoryService.DeleteInventoryItem(recordId);
 			}
 		}
 	}
 }
+ 

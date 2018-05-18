@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Dapper" Version="1.50.4" />
     <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.4" />
     <PackageReference Include="NLog" Version="4.5.4" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
     <PackageReference Include="Dapper.SimpleCRUD.NetCore" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,14 +21,18 @@
 
   <ItemGroup>
     <Content Remove="nlog.config" />
+    <Content Remove="wwwroot\images\logo.png" />
+    <Content Remove="References\Aliyun.OSS.deps.json" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="internal-nlog.txt" />
+    <None Remove="References\Aliyun.OSS.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="wwwroot\images\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.Development.json">
@@ -48,6 +52,7 @@
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Inventory\" />
     <Folder Include="Views\Preview\" />
+    <Folder Include="Views\Report\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="SimpleCRUDAsync.cs" />

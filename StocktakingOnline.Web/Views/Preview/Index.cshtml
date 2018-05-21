@@ -6,8 +6,6 @@
 }
 <link type="text/css" rel="stylesheet" href="~/lib/datatables.net-dt/css/jquery.dataTables.min.css" />
 <style>
-
-
 </style>
 @if (Model.CurrentJob == null)
 {
@@ -20,19 +18,25 @@ else
     <div class="col-sm-12 text-center">
         <h3>盘点结果</h3>
     </div>
-    <div class="col-sm-12">
-        <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
-        <p>
-            状态：
-            @if (Model.CurrentJob.IsOpened)
-            {
-                <span class="label label-success">(进行中)</span>
-            }
-            else
-            {
-                <span class="label label-warning">(已结束)</span>
-            }
-        </p>
+    <div class="container row">
+        <div class="col-md-10 col-sm-10 col-xs-10">
+            <p>
+                <span>
+                    当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong>
+                </span>
+                @if (Model.CurrentJob.IsOpened)
+                {
+                    <span class="label label-success">(进行中)</span>
+                }
+                else
+                {
+                    <span class="label label-warning">(已结束)</span>
+                }
+            </p>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+            <a class="btn btn-primary" target="_blank" asp-controller="Report" asp-action="Index">打印</a>
+        </div>
     </div>
     <div class="col-sm-12">
         <table class="display table" id="assetInfo">
@@ -54,8 +58,10 @@ else
                 {
                     <tr data="@item.RecordId">
                         <td>
-                            <button class="btn btn-sm btn-default btn_edit" data="@item.RecordId">编辑</button>
-                            <button class="btn btn-sm btn-default btn_del" data="@item.RecordId">删除</button>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <button class="btn btn-sm btn-info btn_edit" data="@item.RecordId">编辑</button>
+                                <button class="btn btn-sm btn-danger btn_del" data="@item.RecordId">删除</button>
+                            </div>
                         </td>
                         <td>@item.AssetNumber</td>
                         <td data="department">@item.DepartmentName</td>
@@ -80,7 +86,7 @@ else
         </table>
     </div>
     <div class="clearfix">
-        
+
 
     </div>
     <div id="editPanel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -120,73 +126,75 @@ else
 
     </div>
 
-          
 
 }
 
-        @section Scripts
-        {
-        <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
 
-        <script>function fillDataToPage(result) {
-                $("#txt_model").val(result.model);
-                $("#txt_SerialNumber").val(result.serialNumber);
-                $('#department').val(result.departmentId);
-                if (result.brand == 'R') {
-                    $("input:radio[name='brand']").eq(1).attr('checked', 'true');
-                }
-                else {
-                    $("input:radio[name='brand']").eq(0).attr('checked', 'true');
-                }
+
+@section Scripts
+    {
+    <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
+
+    <script>function fillDataToPage(result) {
+            $("#txt_model").val(result.model);
+            $("#txt_SerialNumber").val(result.serialNumber);
+            $('#department').val(result.departmentId);
+            if (result.brand == 'R') {
+                $("input:radio[name='brand']").eq(1).attr('checked', 'true');
+            }
+            else {
+                $("input:radio[name='brand']").eq(0).attr('checked', 'true');
+            }
 
 }
 
 
 
 function loadDepartment() {
-                $.ajax({
-                    type: "Get",
-                    url: "/Preview/Departments",
-                    success: function(result) {
-                        var html = "";
-                        for (var i = 0; i < result.length; i++) {
-                            html += "<option value='" + result[i].departmentId + "'>" + result[i].departmentName + "</option>";
-                        }
-                        $('#department')[0].innerHTML = html;
-
-                    },
-                    error: function() {
-                        alert("获取类别失败");
+            $.ajax({
+                type: "Get",
+                url: "/Preview/Departments",
+                success: function(result) {
+                    var html = "";
+                    for (var i = 0; i < result.length; i++) {
+                        html += "<option value='" + result[i].departmentId + "'>" + result[i].departmentName + "</option>";
                     }
-                });
+                    $('#department')[0].innerHTML = html;
+
+                },
+                error: function() {
+                    alert("获取类别失败");
+                }
+            });
 }
 function loadInventoryItemAfterEdit(recordId) {
-                $.ajax({
-                    type: "Get",
-                    url: "/Preview/Items/" + recordId,
-                    success: function(result) {
-                        $("tr[data=" + recordId + "]").find("td[data='model']").text(result.model);
-                        $("tr[data=" + recordId + "]").find("td[data='department']").text(result.departmentName);
-                        $("tr[data=" + recordId + "]").find("td[data='brand']").text(result.brand);
-                        $("tr[data=" + recordId + "]").find("td[data='sn']").text(result.serialNumber);
-                    },
-                    error: function(xhr, status, error) {
-                        alert("获取失败，刷新页面后重试");
+            $.ajax({
+                type: "Get",
+                url: "/Preview/Items/" + recordId,
+                success: function(result) {
+                    $("tr[data=" + recordId + "]").find("td[data='model']").text(result.model);
+                    $("tr[data=" + recordId + "]").find("td[data='department']").text(result.departmentName);
+                    $("tr[data=" + recordId + "]").find("td[data='brand']").text(result.brand);
+                    $("tr[data=" + recordId + "]").find("td[data='sn']").text(result.serialNumber);
+                },
+                error: function(xhr, status, error) {
+                    alert("获取失败，刷新页面后重试");
 
-                    }
-                })
+                }
+            })
+
 }
 function validateData() {
-                var model = $('#txt_model').val();
-                var sn = $('#txt_SerialNumber').val();
-                if (model.trim() == "" || sn.trim() == "") {
-                    alert("型号和序列号不能为空！");
-                    return false;
-                }
-                if (model.length >= 50 || sn.length >= 50) {
-                    alert("型号和序列号的最大长度为50");
-                    return false;
-                }
+            var model = $('#txt_model').val();
+            var sn = $('#txt_SerialNumber').val();
+            if (model.trim() == "" || sn.trim() == "") {
+                alert("型号和序列号不能为空！");
+                return false;
+            }
+            if (model.length >= 50 || sn.length >= 50) {
+                alert("型号和序列号的最大长度为50");
+                return false;
+            }
 
 }
 
@@ -194,87 +202,87 @@ function validateData() {
 
 $(document).ready(function() {
 
-                var recordId = 0;
+            var recordId = 0;
 
-                $('#assetInfo').DataTable({
-                    "paging": false,
-                    "searching": false,
-                    "bInfo": false,
-                    "ordering": false
+            $('#assetInfo').DataTable({
+                "paging": false,
+                "searching": false,
+                "bInfo": false,
+                "ordering": false
 
-                });
+            });
 
-                $('.btn_del').click(function() {
-                    event.stopPropagation();
-                    if (confirm("是否确认删除")) {
-                        var id = $(this).attr("data");
-                        $.ajax({
-                            type: "delete",
-                            url: "/Preview/Items/" + id,
-                            success: function(result) {
-                                alert("删除成功");
-                                window.location.reload();
-                            },
-                            error: function(xhr, status, error) {
-                                alert("删除失败，请刷新列表后重试");
-
-                            }
-                        })
-                    }
-                });
-
-                $('.btn_edit').click(function() {
-                    loadDepartment();
+            $('.btn_del').click(function() {
+                event.stopPropagation();
+                if (confirm("是否确认删除")) {
                     var id = $(this).attr("data");
                     $.ajax({
-                        type: "Get",
+                        type: "delete",
                         url: "/Preview/Items/" + id,
                         success: function(result) {
-                            fillDataToPage(result);
-                            recordId = id;
+                            alert("删除成功");
+                            window.location.reload();
                         },
                         error: function(xhr, status, error) {
-                            alert("获取失败，刷新页面后重试");
+                            alert("删除失败，请刷新列表后重试");
 
                         }
                     })
-                    $('#editPanel').modal('show');
+                }
+            });
 
-                });
+            $('.btn_edit').click(function() {
+                loadDepartment();
+                var id = $(this).attr("data");
+                $.ajax({
+                    type: "Get",
+                    url: "/Preview/Items/" + id,
+                    success: function(result) {
+                        fillDataToPage(result);
+                        recordId = id;
+                    },
+                    error: function(xhr, status, error) {
+                        alert("获取失败，刷新页面后重试");
 
-                $('#btn_save').click(function() {
-
-                    var departmentId = $('#department').val();
-                    var brand = $("input[name='brand']:checked").val();
-                    var model = $('#txt_model').val();
-                    var sn = $('#txt_SerialNumber').val();
-                    if (model.length > 50 || sn.length > 50) {
-                        alert("型号和序列号的最大长度为50");
-                        return false;
                     }
-                    var data = {
-                        departmentId: departmentId,
-                        brand: brand,
-                        model: model,
-                        SerialNumber: sn
-                    };
+                });
+                $('#editPanel').modal('show');
 
-                    $.ajax({
-                        type: "Post",
-                        url: "/Preview/Items/" + recordId,
-                        data: data,
-                        success: function(result) {
-                            loadInventoryItemAfterEdit(recordId)
-                        },
-                        error: function() {
-                            alert('保存失败！');
-                        }
-                    })
-                    $('#editPanel').modal('hide');
+            });
 
-                })
+            $('#btn_save').click(function() {
+
+                var departmentId = $('#department').val();
+                var brand = $("input[name='brand']:checked").val();
+                var model = $('#txt_model').val();
+                var sn = $('#txt_SerialNumber').val();
+                if (model.length > 50 || sn.length > 50) {
+                    alert("型号和序列号的最大长度为50");
+                    return false;
+                }
+                var data = {
+                    departmentId: departmentId,
+                    brand: brand,
+                    model: model,
+                    SerialNumber: sn
+                };
+                $.ajax({
+                    type: "Post",
+                    url: "/Preview/Items/" + recordId,
+                    data: data,
+                    success: function(result) {
+                        loadInventoryItemAfterEdit(recordId)
+                    },
+                    error: function() {
+                        alert('保存失败！');
+                    }
+                });
+                $('#editPanel').modal('hide');
 
 
-});</script>
+            })
+        });
 
-        }
+</script>
+
+}

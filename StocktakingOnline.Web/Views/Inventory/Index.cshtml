@@ -16,6 +16,10 @@ else if (!Model.CurrentJob.IsOpened)
 }
 else
 {
+    @section Scripts {
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+    }
+
     <div class="text-center">
         <h3>开始盘点</h3>
     </div>

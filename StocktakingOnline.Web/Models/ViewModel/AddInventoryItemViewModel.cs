@@ -10,6 +10,7 @@ namespace StocktakingOnline.Web.Models.ViewModel
 	public class AddInventoryItemViewModel
 	{
 		[Display(Name = "商品编号")]
+		[MaxLength(50, ErrorMessage = "商品编号不能多于50个字符")]
 		public string ProductId { get; set; }
 
 		[Required]
@@ -26,9 +27,11 @@ namespace StocktakingOnline.Web.Models.ViewModel
 
 		[Required]
 		[Display(Name = "型号")]
+		[MaxLength(50, ErrorMessage = "型号长度不能多于50个字符")]
 		public string Model { get; set; }
 
 		[Display(Name ="序列号")]
+		[MaxLength(50, ErrorMessage = "序列号长度不能多于50个字符")]
 		public string SerialNumber { get; set; }
 
 		[Display(Name ="照片")]

@@ -37,8 +37,7 @@
     .cw {
         color: white;
     }
-
-    </style>
+</style>
 @if (Model.CurrentJob == null)
 {
     <div class="col-sm-12">
@@ -50,19 +49,25 @@ else
     <div class="col-sm-12 text-center">
         <h3>盘点结果</h3>
     </div>
-    <div class="col-sm-12">
-        <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>
-        <p>
-            状态：
-            @if (Model.CurrentJob.IsOpened)
-            {
-                <span class="label label-success">(进行中)</span>
-            }
-            else
-            {
-                <span class="label label-warning">(已结束)</span>
-            }
-        </p>
+    <div class="container row">
+        <div class="col-md-10 col-sm-10 col-xs-10">
+            <p>
+                <span>
+                    当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong>
+                </span>
+                @if (Model.CurrentJob.IsOpened)
+                {
+                    <span class="label label-success">(进行中)</span>
+                }
+                else
+                {
+                    <span class="label label-warning">(已结束)</span>
+                }
+            </p>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-2 text-right">
+            <a class="btn btn-primary" target="_blank" asp-controller="Report" asp-action="Index">打印</a>
+        </div>
     </div>
     <div class="col-sm-12">
         <table class="display table" id="assetInfo">
@@ -84,8 +89,10 @@ else
                 {
                     <tr data="@item.RecordId">
                         <td>
-                            <button class="btn btn-sm btn-default btn_edit" data="@item.RecordId">编辑</button>
-                            <button class="btn btn-sm btn-default btn_del" data="@item.RecordId">删除</button>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <button class="btn btn-sm btn-info btn_edit" data="@item.RecordId">编辑</button>
+                                <button class="btn btn-sm btn-danger btn_del" data="@item.RecordId">删除</button>
+                            </div>
                         </td>
                         <td>@item.AssetNumber</td>
                         <td data="department">@item.DepartmentName</td>
@@ -110,7 +117,7 @@ else
         </table>
     </div>
     <div class="clearfix">
-        
+
 
     </div>
     <div id="editPanel">
@@ -123,7 +130,7 @@ else
 
             <div class="form-group">
                 <label class="cw">品牌</label>
-                <input type="radio" value="A" name="brand"  /><span class="cw">苹果产品</span>
+                <input type="radio" value="A" name="brand" /><span class="cw">苹果产品</span>
                 <input type="radio" value="R" name="brand" /><span class="cw">非苹果产品</span>
             </div>
 
@@ -154,7 +161,8 @@ else
     {
     <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
 
-    <script>function fillDataToPage(result) {
+    <script>
+function fillDataToPage(result) {
             $("#txt_model").val(result.model);
             $("#txt_SerialNumber").val(result.serialNumber);
             $('#department').val(result.departmentId);
@@ -234,7 +242,7 @@ function loadDepartment() {
                 alert("型号和序列号的最大长度为50");
                 return false;
             }
-        
+
         }
 
 
@@ -290,7 +298,7 @@ $(document).ready(function() {
             });
 
             $('#btn_save').click(function() {
-                
+
                 var departmentId = $('#department').val();
                 var brand = $("input[name='brand']:checked").val();
                 var model = $('#txt_model').val();

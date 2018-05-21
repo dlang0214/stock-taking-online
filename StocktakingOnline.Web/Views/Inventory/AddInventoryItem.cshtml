@@ -26,7 +26,8 @@
         <label asp-for="Brand"></label>
         @foreach (var b in Model.BrandList)
         {
-            <input type="radio" asp-for="Brand" value="@b.Value" />@b.Text
+            <input type="radio" asp-for="Brand" id="Brand@(b.Value)" value="@b.Value" />
+            <label for="Brand@(b.Value)">@b.Text</label>
         }
         <span asp-validation-for="Brand" class="text-danger"></span>
     </div>

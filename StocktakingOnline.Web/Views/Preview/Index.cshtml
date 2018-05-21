@@ -6,37 +6,6 @@
 }
 <link type="text/css" rel="stylesheet" href="~/lib/datatables.net-dt/css/jquery.dataTables.min.css" />
 <style>
-    #overlay {
-        background: #000;
-        filter: alpha(opacity=50);
-        /* IE的透明度 */
-        opacity: 0.5;
-        /* 透明度 */
-        display: none;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        height: 100%;
-        z-index: 100;
-        /* 此处的图层要大于页面 */
-        display: none;
-        _background-color: #a0a0a0;
-        /* 解决IE6的不透明问题 */
-    }
-
-    #editPanel {
-        width: 80%;
-        z-index: 101;
-        display: none;
-        position: absolute;
-        height: 60%;
-        top: 20%;
-    }
-
-    .cw {
-        color: white;
-    }
 </style>
 @if (Model.CurrentJob == null)
 {
@@ -120,49 +89,53 @@ else
 
 
     </div>
-    <div id="editPanel">
-        <div class="col-sm-10 col-sm-offset-1 text-left form">
+    <div id="editPanel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form">
 
-            <div class="form-group">
-                <label class="cw">类别</label>
-                <select id="department"></select>
-            </div>
+                        <div class="form-group">
+                            <label>类别</label>
+                            <select id="department"></select>
+                        </div>
 
-            <div class="form-group">
-                <label class="cw">品牌</label>
-                <input type="radio" value="A" name="brand" /><span class="cw">苹果产品</span>
-                <input type="radio" value="R" name="brand" /><span class="cw">非苹果产品</span>
-            </div>
+                        <div class="form-group">
+                            <label>品牌</label>
+                            <input type="radio" value="A" name="brand" /><span class="cw">苹果产品</span>
+                            <input type="radio" value="R" name="brand" /><span class="cw">非苹果产品</span>
+                        </div>
 
-            <div class="form-group">
-                <label class="cw">型号</label>
-                <input type="text" id="txt_model" class="form-control" />
-            </div>
+                        <div class="form-group">
+                            <label>型号</label>
+                            <input type="text" id="txt_model" class="form-control" />
+                        </div>
 
-            <div class="form-group">
-                <label class="cw">序列号</label>
-                <input type="text" id="txt_SerialNumber" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <button id="btn_save" class="btn btn-default btn-primary">保存</button>
-                <button id="btn_cancel" class="btn btn-default btn-primary">取消</button>
+                        <div class="form-group">
+                            <label>序列号</label>
+                            <input type="text" id="txt_SerialNumber" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_save" onclick="" class="btn btn-default btn-primary">保存</button>
+                    <button id="btn_cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div id="overlay">
 
     </div>
+
 
 }
+
+
 
 @section Scripts
     {
     <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
 
-    <script>
-function fillDataToPage(result) {
+    <script>function fillDataToPage(result) {
             $("#txt_model").val(result.model);
             $("#txt_SerialNumber").val(result.serialNumber);
             $('#department').val(result.departmentId);
@@ -176,27 +149,6 @@ function fillDataToPage(result) {
 }
 
 
-/* 显示遮罩层 */
-function showEditPanel() {
-
-         $("#overlay").height(document.body.height);
-            $("#overlay").width(document.body.width);
-            $("#overlay").fadeTo(200, 0.8);
-            // 解决窗口缩小时放大后不全屏遮罩的问题
-            $(window).resize(function() {
-                $("#overlay").height(document.body.height);
-                $("#overlay").width(document.body.width);
-            });
-        $("#editPanel").css('display','block');
-
-}
-/* 隐藏覆盖层 */
-function hideEditPanel() {
-        $("#overlay").fadeOut(200);
-        $("#editPanel").css('display','none');
-
-
-}
 
 function loadDepartment() {
             $.ajax({
@@ -215,35 +167,36 @@ function loadDepartment() {
                 }
             });
 }
-        function loadInventoryItemAfterEdit(recordId){
+function loadInventoryItemAfterEdit(recordId) {
             $.ajax({
-                    type: "Get",
-                    url: "/Preview/Items/" + recordId,
-                    success: function(result) {
-                        $("tr[data="+recordId+"]").find("td[data='model']").text(result.model);
-                        $("tr[data="+recordId+"]").find("td[data='department']").text(result.departmentName);
-                        $("tr[data="+recordId+"]").find("td[data='brand']").text(result.brand);
-                        $("tr[data="+recordId+"]").find("td[data='sn']").text(result.serialNumber);
-                    },
-                    error: function(xhr, status, error) {
-                        alert("获取失败，刷新页面后重试");
+                type: "Get",
+                url: "/Preview/Items/" + recordId,
+                success: function(result) {
+                    $("tr[data=" + recordId + "]").find("td[data='model']").text(result.model);
+                    $("tr[data=" + recordId + "]").find("td[data='department']").text(result.departmentName);
+                    $("tr[data=" + recordId + "]").find("td[data='brand']").text(result.brand);
+                    $("tr[data=" + recordId + "]").find("td[data='sn']").text(result.serialNumber);
+                },
+                error: function(xhr, status, error) {
+                    alert("获取失败，刷新页面后重试");
 
-                    }
-                })
-        }
-        function validateData(){
-             var model = $('#txt_model').val();
-             var sn = $('#txt_SerialNumber').val();
-            if(model.trim()==""||sn.trim()==""){
+                }
+            })
+
+}
+function validateData() {
+            var model = $('#txt_model').val();
+            var sn = $('#txt_SerialNumber').val();
+            if (model.trim() == "" || sn.trim() == "") {
                 alert("型号和序列号不能为空！");
                 return false;
             }
-        if(model.length>=50||sn.length>=50){
+            if (model.length >= 50 || sn.length >= 50) {
                 alert("型号和序列号的最大长度为50");
                 return false;
             }
 
-        }
+}
 
 
 
@@ -292,8 +245,8 @@ $(document).ready(function() {
                         alert("获取失败，刷新页面后重试");
 
                     }
-                })
-                showEditPanel();
+                });
+                $('#editPanel').modal('show');
 
             });
 
@@ -303,11 +256,7 @@ $(document).ready(function() {
                 var brand = $("input[name='brand']:checked").val();
                 var model = $('#txt_model').val();
                 var sn = $('#txt_SerialNumber').val();
-                @*if(model.trim()==""||sn.trim()==""){
-                    alert("型号和序列号不能为空！");
-                    return;
-                }*@
-                if(model.length>50||sn.length>50){
+                if (model.length > 50 || sn.length > 50) {
                     alert("型号和序列号的最大长度为50");
                     return false;
                 }
@@ -317,25 +266,23 @@ $(document).ready(function() {
                     model: model,
                     SerialNumber: sn
                 };
-
                 $.ajax({
                     type: "Post",
                     url: "/Preview/Items/" + recordId,
                     data: data,
                     success: function(result) {
-                       loadInventoryItemAfterEdit(recordId)
+                        loadInventoryItemAfterEdit(recordId)
                     },
                     error: function() {
                         alert('保存失败！');
                     }
-                })
-                hideEditPanel();
-            })
+                });
+                $('#editPanel').modal('hide');
 
-            $('#btn_cancel').click(function() {
-                hideEditPanel();
-            })
 
-});</script>
+            })
+        });
+
+</script>
 
 }

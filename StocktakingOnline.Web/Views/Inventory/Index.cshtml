@@ -16,9 +16,17 @@ else if (!Model.CurrentJob.IsOpened)
 }
 else
 {
-    <div class="col-sm-12 text-center">
+    <div class="text-center">
         <h3>开始盘点</h3>
     </div>
+
+    @if (Model.ShowAddSuccessedText)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            数据已成功录入
+        </div>
+    }
 
     <div class="col-sm-12 text-left">
         <p>当前盘点工作：<strong>[@Model.CurrentJob.JobName] @Model.CurrentJob.JobDescription</strong></p>

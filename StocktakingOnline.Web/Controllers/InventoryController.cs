@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using StocktakingOnline.Web.Models.ViewModel;
 using StocktakingOnline.Web.Models.Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace StocktakingOnline.Web.Controllers
 {
@@ -39,11 +40,12 @@ namespace StocktakingOnline.Web.Controllers
 
 		[HttpGet]
 		[Route("Index")]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(bool addSuccessed = false)
 		{
 			var user = await userManager.GetUserAsync(HttpContext.User);
 			var departments = await departmentService.GetDepartments();
 			var vm = new InventoryViewModel();
+			vm.ShowAddSuccessedText = addSuccessed;
 			vm.CurrentJob = user.CurrentJobId == null ? null : await jobService.GetJob(user.CurrentJobId.Value);
 			vm.AddInventoryItemViewModel = new AddInventoryItemViewModel()
 			{
@@ -106,14 +108,21 @@ namespace StocktakingOnline.Web.Controllers
 					item = await inventoryService.AddInventoryItem(item);
 
 					logger.LogInformation($"User {user.UserName}({user.DisplayName}) add new item to job {item.JobId} with {item.ImageFiles.Count} pictures");
+					return RedirectToAction("Index", new
+					{
+						addSuccessed = true
+					});
 				}
 				else
 				{
 					ModelState.AddModelError(string.Empty, "当前工作已结束");
+					return RedirectToAction("Index");
 				}
 			}
-
-			return RedirectToAction("Index");
+			else
+			{
+				return RedirectToAction("Index");
+			}
 		}
 	}
 }

@@ -56,7 +56,7 @@ else
             <tbody>
                 @foreach (var item in Model.Items)
                 {
-                    <tr data="@item.RecordId">
+                    <tr data-record="@item.RecordId">
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <button class="btn btn-sm btn-primary btn_edit" data="@item.RecordId">编辑</button>
@@ -64,10 +64,10 @@ else
                             </div>
                         </td>
                         <td>@item.AssetNumber</td>
-                        <td data="department">@item.DepartmentName</td>
-                        <td class="dt-body-center" data="brand">@item.Brand</td>
-                        <td class="dt-body-center" data="model">@item.Model</td>
-                        <td class="dt-body-center" data="sn">@item.SerialNumber</td>
+                        <td data-recordItem="department">@item.DepartmentName</td>
+                        <td class="dt-body-center" data-recordItem="brand">@item.Brand</td>
+                        <td class="dt-body-center" data-recordItem="model">@item.Model</td>
+                        <td class="dt-body-center" data-recordItem="sn">@item.SerialNumber</td>
                         <td class="dt-body-center">@item.UserDisplayName</td>
                         <td class="dt-body-center">@item.CreatedTime.ToString("yyyy-MM-dd HH:mm")</td>
                         <td>
@@ -140,17 +140,17 @@ else
     <script src="~/lib/datatables.net/js/jquery.dataTables.min.js"></script>
 
     <script>function fillDataToPage(result) {
-        console.log(result);
-        $("#txt_model").val(result.model);
-        $("#txt_SerialNumber").val(result.serialNumber);
-        $('#department').val(result.departmentId);
-        if (result.brand == 'R') {
-            $("input:radio[name='brand']").eq(1).attr('checked', 'true');
-        }
-        else {
-            $("input:radio[name='brand']").eq(0).attr('checked', 'true');
-        }
-        $("#txt_assetNumber").val(result.assetNumber);
+            console.log(result);
+            $("#txt_model").val(result.model);
+            $("#txt_SerialNumber").val(result.serialNumber);
+            $('#department').val(result.departmentId);
+            if (result.brand == 'R') {
+                $("input:radio[name='brand']").eq(1).attr('checked', 'true');
+            }
+            else {
+                $("input:radio[name='brand']").eq(0).attr('checked', 'true');
+            }
+            $("#txt_assetNumber").val(result.assetNumber);
 
 }
 
@@ -160,6 +160,7 @@ function loadDepartment() {
             $.ajax({
                 type: "Get",
                 url: "/Preview/Departments",
+                cache: false,
                 success: function(result) {
                     var html = "";
                     for (var i = 0; i < result.length; i++) {
@@ -177,11 +178,12 @@ function loadInventoryItemAfterEdit(recordId) {
             $.ajax({
                 type: "Get",
                 url: "/Preview/Items/" + recordId,
+                cache: false,
                 success: function(result) {
-                    $("tr[data=" + recordId + "]").find("td[data='model']").text(result.model);
-                    $("tr[data=" + recordId + "]").find("td[data='department']").text(result.departmentName);
-                    $("tr[data=" + recordId + "]").find("td[data='brand']").text(result.brand);
-                    $("tr[data=" + recordId + "]").find("td[data='sn']").text(result.serialNumber);
+                    $("tr[data-record=" + recordId + "]").find("td[data-recordItem='model']").text(result.model);
+                    $("tr[data-record=" + recordId + "]").find("td[data-recordItem='department']").text(result.departmentName);
+                    $("tr[data-record=" + recordId + "]").find("td[data-recordItem='brand']").text(result.brand);
+                    $("tr[data-record=" + recordId + "]").find("td[data-recordItem='sn']").text(result.serialNumber);
                 },
                 error: function(xhr, status, error) {
                     alert("获取失败，刷新页面后重试");
@@ -243,6 +245,7 @@ $(document).ready(function() {
                 $.ajax({
                     type: "Get",
                     url: "/Preview/Items/" + id,
+                    cache: false,
                     success: function(result) {
                         fillDataToPage(result);
                         recordId = id;
@@ -275,6 +278,7 @@ $(document).ready(function() {
                 $.ajax({
                     type: "Post",
                     url: "/Preview/Items/" + recordId,
+                    cache: false,
                     data: data,
                     success: function(result) {
                         loadInventoryItemAfterEdit(recordId)
